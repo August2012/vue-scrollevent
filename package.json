@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/vue-scrollevent.js",
   "scripts": {
-    "build": "",
+    "build": "babel ./src/index.js --out-file ./dist/vue-scrollevent.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
