@@ -16,3 +16,13 @@ vue.use(vue-scrollevent);
 ```
 
 ### 在页面中使用
+```js
+vue.scroll.push({
+    fn (e) {
+        console.log('执行函数');
+        console.log(JSON.stringify(e));
+    },
+    position:'bottom'
+    // 支持类型数字为滚动条距离,字符为top bottom left right move,对应滚动条到哪个底部位置触发
+});
+```
