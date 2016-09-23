@@ -100,6 +100,7 @@ export default {
         Object.defineProperty(vue.prototype, '$scroll', {
           get () { return fn }
         });
-        vue.scroll.bind(options);
+        console.log(vue.prototype);
+        vue.prototype.$scroll.bind(options);
     }
 };

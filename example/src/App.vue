@@ -138,7 +138,7 @@
     },
     created () {
       console.log(this)
-      console.log('scroll' in this)
+      console.log('$scroll' in this)
     }
   }
 </script>
