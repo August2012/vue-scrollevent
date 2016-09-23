@@ -5,7 +5,7 @@
 
 ### 安装
 ```
-npm install vue-scrollevent
+npm install --save vue-scrollevent
 ```
 
 ### 在vue中引用
@@ -55,3 +55,5 @@ vue.use(vue-scrollevent);
             }
           }
 ```
+
+[测试案例](example)
