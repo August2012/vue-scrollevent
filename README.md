@@ -26,3 +26,5 @@ vue.scroll.push({
     // 支持类型数字为滚动条距离,字符为top bottom left right move,对应滚动条到哪个底部位置触发
 });
 ```
+
+### api操作
