@@ -139,6 +139,29 @@
     created () {
       console.log(this)
       console.log('$scroll' in this)
+      // 装载测试函数
+      // move测试
+      this.$scroll.push({
+        fn (_height) {
+          console.log('move' + _height)
+        },
+        position: 'move'
+      });
+      // 到顶测试
+      this.$scroll.push({
+        fn () {
+          console.log('go to top')
+        },
+        position: 'top'
+      });
+      // 到底测试
+      // bottom可能需要进行锁定
+      this.$scroll.push({
+        fn () {
+          console.log('go to bottom')
+        },
+        position: 'bottom'
+      });
     }
   }
 </script>

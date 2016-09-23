@@ -1,4 +1,5 @@
 let eventData = [];
+let $lockCheck = false;
 // event结构
 // {
 //    fn:function() // 需要执行的函数
@@ -46,38 +47,47 @@ let getWindowHeight = () => {
 let check = () => {
     // TODO 可以考虑这里加一些预留的参数底
     // 到顶
+    if($lockCheck) return;
+    $lockCheck = true;
     if(getScrollTop() === 0) {
+        console.log('go to top');
         eventData.filter(p=>p.position === 'top').forEach(p=>{
             p.fn();
         });
     } else if (getScrollTop() + getWindowHeight() >= getScrollHeight() - 50) {
+        console.log('go to bottom');
         // 到底
         eventData.filter(p=>p.position === 'bottom').forEach(p=> {
-            p();
+            p.fn();
         });
         return true;
     }
+    $lockCheck = false;
     return false;
 };
 // TODO 滚动条自动加载
 let fn = {
-    bind () {
+    bind (_opt) {
+        this.options = _opt;
+        console.log('ready ok');
         let event = () => {
             clearTimeout(t);
             let scrollHeight = getScrollTop() + getWindowHeight();
             eventData.filter(p=>p.position === 'move').forEach(p=> {
+                console.log('move');
                 p.fn(scrollHeight);
             });
             t = setTimeout(function () {
+                console.log('check position');
                 check();
             }, 100);
         };
         // TODO 如有性能问题 将此注释
         // window.addEventListener('touchmove', event);
-        document.body.addEventListener('scroll', e=> {
+        window.addEventListener('scroll', e=> {
             event();
         });
-        window.onscroll();
+        // document.dispatchEvent('scroll');
     },
     //仅支持到底触发
     push (event) {
@@ -94,7 +104,9 @@ let fn = {
 };
 export default {
     install (vue, options) {
-        vue.scroll = fn;
-        vue.scroll.bind(options);
+        Object.defineProperty(vue.prototype, '$scroll', {
+            get () { return fn }
+        });
+        vue.prototype.$scroll.bind(options);
     }
 };

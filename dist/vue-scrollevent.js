@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var eventData = [];
+var $lockCheck = false;
 // event结构
 // {
 //    fn:function() // 需要执行的函数
@@ -52,44 +53,53 @@ var getWindowHeight = function getWindowHeight() {
 var check = function check() {
     // TODO 可以考虑这里加一些预留的参数底
     // 到顶
+    if ($lockCheck) return;
+    $lockCheck = true;
     if (getScrollTop() === 0) {
+        console.log('go to top');
         eventData.filter(function (p) {
             return p.position === 'top';
         }).forEach(function (p) {
             p.fn();
         });
     } else if (getScrollTop() + getWindowHeight() >= getScrollHeight() - 50) {
+        console.log('go to bottom');
         // 到底
         eventData.filter(function (p) {
             return p.position === 'bottom';
         }).forEach(function (p) {
-            p();
+            p.fn();
         });
         return true;
     }
+    $lockCheck = false;
     return false;
 };
 // TODO 滚动条自动加载
 var fn = {
-    bind: function bind() {
+    bind: function bind(_opt) {
+        this.options = _opt;
+        console.log('ready ok');
         var event = function event() {
             clearTimeout(t);
             var scrollHeight = getScrollTop() + getWindowHeight();
             eventData.filter(function (p) {
                 return p.position === 'move';
             }).forEach(function (p) {
+                console.log('move');
                 p.fn(scrollHeight);
             });
             t = setTimeout(function () {
+                console.log('check position');
                 check();
             }, 100);
         };
         // TODO 如有性能问题 将此注释
         // window.addEventListener('touchmove', event);
-        document.body.addEventListener('scroll', function (e) {
+        window.addEventListener('scroll', function (e) {
             event();
         });
-        window.onscroll();
+        // document.dispatchEvent('scroll');
     },
 
     //仅支持到底触发
@@ -108,7 +118,11 @@ var fn = {
 };
 exports.default = {
     install: function install(vue, options) {
-        vue.scroll = fn;
-        vue.scroll.bind(options);
+        Object.defineProperty(vue.prototype, '$scroll', {
+            get: function get() {
+                return fn;
+            }
+        });
+        vue.prototype.$scroll.bind(options);
     }
 };

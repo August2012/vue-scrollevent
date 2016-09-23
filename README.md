@@ -17,14 +17,41 @@ vue.use(vue-scrollevent);
 
 ### 在页面中使用
 ```js
-vue.scroll.push({
-    fn (e) {
-        console.log('执行函数');
-        console.log(JSON.stringify(e));
-    },
-    position:'bottom'
-    // 支持类型数字为滚动条距离,字符为top bottom left right move,对应滚动条到哪个底部位置触发
-});
+        export default {
+            data () {
+              return {
+                scrolldata: 'no'
+              }
+            },
+            components: {
+              Hello
+            },
+            created () {
+              console.log(this)
+              console.log('$scroll' in this)
+              // 装载测试函数
+              // move测试
+              this.$scroll.push({
+                fn (_height) {
+                  console.log('move' + _height)
+                },
+                position: 'move'
+              });
+              // 到顶测试
+              this.$scroll.push({
+                fn () {
+                  console.log('go to top')
+                },
+                position: 'top'
+              });
+              // 到底测试
+              // bottom可能需要进行锁定
+              this.$scroll.push({
+                fn () {
+                  console.log('go to bottom')
+                },
+                position: 'bottom'
+              });
+            }
+          }
 ```
-
-### api操作
